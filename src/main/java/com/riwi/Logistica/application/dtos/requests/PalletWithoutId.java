@@ -20,14 +20,8 @@ public class PalletWithoutId {
     @NotNull(message = "La capacidad maxima es requerida")
     private Long capacidad_maxima;
 
-    @NotBlank(message = "El peso es requerido")
-    private String peso;
-
     @NotNull(message = "La ubicacion es requerida")
     private String ubicacion;
-
-    @NotNull(message = "La carga es requerida")
-    private Set<CargaOnlyWithId> cargas;
 
     @NotNull(message = "El estao del pallet es requerido")
     private PalletStatus estado;

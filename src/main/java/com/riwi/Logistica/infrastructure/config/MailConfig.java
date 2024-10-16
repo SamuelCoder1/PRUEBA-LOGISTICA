@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-public class EmailConfig {
+public class MailConfig {
 
     @Bean
     public JavaMailSender getJavaMailSender() {
@@ -17,12 +17,13 @@ public class EmailConfig {
         mailSender.setPort(587);
 
         mailSender.setUsername("echeverrysamuel74@gmail.com");
-        mailSender.setPassword("ykaessoadjplykgr");
+        mailSender.setPassword("sdkwqwvrbqbwqiwv"); // Tu contraseña específica
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.starttls.enable", "true");
+        props.put("mail.smtp.starttls.enable", "true"); // Asegúrate de que esto esté aquí
+        props.put("mail.smtp.starttls.required", "true"); // Y esto también
         props.put("mail.debug", "true");
 
         return mailSender;

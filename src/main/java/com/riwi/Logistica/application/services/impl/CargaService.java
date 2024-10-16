@@ -39,7 +39,7 @@ public class CargaService implements ICargaService {
     UserRepository userRepository;
 
     @Autowired
-    EmailService emailService;
+    MailService emailService;
 
     @Autowired
     AuditRepository auditRepository;
@@ -56,30 +56,27 @@ public class CargaService implements ICargaService {
         User transportador = userRepository.findById(cargaDTO.getTransportador().getId())
                 .orElseThrow(() -> new GenericNotFoundExceptions("Transportador not found with ID: " + cargaDTO.getTransportador().getId()));
 
-        Long pesoCarga = pallet.getCargas().stream()
+        Long pesoTotalCargas = cargaRepository.findByPallet(pallet).stream()
                 .mapToLong(Carga::getPeso)
                 .sum();
 
-        if (pesoCarga + cargaDTO.getPeso() > pallet.getCapacidad_maxima()) {
+        if (pesoTotalCargas + cargaDTO.getPeso() > pallet.getCapacidad_maxima()) {
             throw new CapacityExceededException("Cannot add carga. Exceeds maximum capacity of the pallet.");
         }
 
         Carga carga = Carga.builder()
                 .dimensiones(cargaDTO.getDimensiones())
                 .peso(cargaDTO.getPeso())
-                .pallet(pallet)
                 .estado(cargaDTO.getEstado())
                 .transportador(transportador)
                 .build();
 
         cargaRepository.save(carga);
-        pallet.getCargas().add(carga);
-        palletRepository.save(pallet);
-
         logAudit("Carga", carga.getId(), "CREATE", getCurrentUser(), "Created carga with ID: " + carga.getId());
 
         return carga;
     }
+
 
     @Override
     public Carga update(Long id, CargaWithoutId cargaDTO) {
@@ -90,10 +87,11 @@ public class CargaService implements ICargaService {
         Carga existingCarga = cargaRepository.findById(id)
                 .orElseThrow(() -> new GenericNotFoundExceptions("Carga not found with ID: " + id));
 
+
         Pallet newPallet = palletRepository.findById(cargaDTO.getPallet().getId())
                 .orElseThrow(() -> new GenericNotFoundExceptions("Pallet not found with ID: " + cargaDTO.getPallet().getId()));
 
-        Long totalPesoCargas = newPallet.getCargas().stream()
+        Long totalPesoCargas = cargaRepository.findByPallet(newPallet).stream()
                 .filter(c -> !c.getId().equals(existingCarga.getId()))
                 .mapToLong(Carga::getPeso)
                 .sum();
@@ -104,7 +102,6 @@ public class CargaService implements ICargaService {
 
         existingCarga.setDimensiones(cargaDTO.getDimensiones());
         existingCarga.setPeso(cargaDTO.getPeso());
-        existingCarga.setPallet(newPallet);
         existingCarga.setEstado(cargaDTO.getEstado());
         existingCarga.setTransportador(userRepository.findById(cargaDTO.getTransportador().getId())
                 .orElseThrow(() -> new GenericNotFoundExceptions("Transportador not found with ID: " + cargaDTO.getTransportador().getId())));
@@ -114,6 +111,7 @@ public class CargaService implements ICargaService {
 
         return updatedCarga;
     }
+
 
     @Override
     public void delete(Long id) {
@@ -170,11 +168,13 @@ public class CargaService implements ICargaService {
 
         Carga carga = cargaRepository.findById(request.getId_carga())
                 .orElseThrow(() -> new GenericNotFoundExceptions("Carga not found"));
+
         carga.setEstado(CargaStatus.DAÑADA);
         cargaRepository.save(carga);
 
         logAudit("Carga", carga.getId(), "REPORT_DAMAGE", getCurrentUser(), "Reported damage for carga with ID: " + carga.getId());
 
+        // Enviar el reporte por correo
         emailService.sendReport(carga, request);
     }
 

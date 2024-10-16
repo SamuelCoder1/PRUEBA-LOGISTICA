@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class CargaOnlyWithId {
-
     @NotNull(message = "El id es requerido")
     private Long id;
 }
