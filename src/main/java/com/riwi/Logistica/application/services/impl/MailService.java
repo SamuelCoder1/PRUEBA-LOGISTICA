@@ -29,7 +29,8 @@ public class MailService implements IMailService {
 
         String[] to = {
                 "daviocassio95@gmail.com",
-                "samuelparkourito132@gmail.com"
+                "samuelparkourito132@gmail.com",
+                "osorioemanuel0520@gmail.com"
         };
 
         message.setTo(to);
