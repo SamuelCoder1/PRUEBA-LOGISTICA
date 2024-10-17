@@ -22,6 +22,7 @@ public class MailService implements IMailService {
     @Override
     public void sendReport(Carga carga, ReportRequest request) {
 
+
         //SE DECLARA SUBJECT Y BODY, ESTO PUEDE SER PERSONALIZADO
         String subject = "Carga damage report: " + carga.getId();
         String body = "Damage has been reported to the cargo with ID: " + carga.getId() +

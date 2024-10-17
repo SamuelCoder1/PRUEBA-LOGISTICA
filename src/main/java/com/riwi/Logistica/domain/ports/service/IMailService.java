@@ -8,9 +8,10 @@ import java.io.File;
 
 public interface IMailService {
 
+
     //GENERICO
     void sendEmail(EmailRequest emailRequest);
-
+  
     //COMO SE NECESITE
     void sendReport(Carga carga, ReportRequest request);
 
