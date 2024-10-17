@@ -7,8 +7,12 @@ import com.riwi.Logistica.domain.entities.Carga;
 import java.io.File;
 
 public interface IMailService {
-    void sendEmail(EmailRequest emailRequest);
 
+
+    //GENERICO
+    void sendEmail(EmailRequest emailRequest);
+  
+    //COMO SE NECESITE
     void sendReport(Carga carga, ReportRequest request);
 
     //void sendEmailWithFile(EmailRequest emailRequest, File file);
