@@ -23,9 +23,6 @@ public class MailConfig {
         mailSender.setPassword("sdkwqwvrbqbwqiwv"); // CONTRASEÑA CREADA EN GOOGLE (CONTRASEÑAS DE APLICACION) EN GOOGLE
 
         //PROPIEDADES DE MAILSENDER
-        mailSender.setUsername("echeverrysamuel74@gmail.com");
-        mailSender.setPassword("sdkwqwvrbqbwqiwv"); // Tu contraseña específica
-
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
